@@ -7,14 +7,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationService extends NotificationListenerService {
 
-	public static boolean sCleanNotification = false;
+	public static boolean sCleanNotification = true;
 
 	@Override
 	public void onStart(Intent intent, int startId) {
+		getActiveNotifications();
+		
 		if (sCleanNotification) {
 			// 清空通知栏
 			try {
@@ -32,6 +35,8 @@ public class NotificationService extends NotificationListenerService {
 
 	@Override
 	public void onNotificationPosted(StatusBarNotification arg0) {
+		Log.wtf("zzz", "onNotificationPosted");
+		
 		if (sCleanNotification) {
 			// 清空通知栏
 			try {
@@ -52,7 +57,7 @@ public class NotificationService extends NotificationListenerService {
 
 	}
 
-	private Handler mHandler = new Handler() {
+	private final Handler mHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {

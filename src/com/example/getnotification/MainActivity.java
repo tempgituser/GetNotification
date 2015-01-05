@@ -33,9 +33,18 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
+
+//		Intent notificationIntent = new Intent(getApplicationContext(), NotificationService.class);
+//		startService(notificationIntent);
+//		
+//		NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//		nMgr.cancelAll();
+//		clearNotification();
+
 		testButton = (Button) findViewById(R.id.exec);
 		textView = (TextView) findViewById(R.id.textView);
 		testButton.setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				String[] commands = { "dumpsys notification" };
 				String log = run(commands);
@@ -44,11 +53,8 @@ public class MainActivity extends Activity {
 //				checkNotfi = true;
 				
 				if (null == null || checkNotfi && log.toString().contains(notiTitle)){
-//					String sql[] = { "sqlite3 /data/data/com.whatsapp/databases/msgstore.db 'select _id,data from messages where key_remote_jid = \"@s.whatsapp.net\" and key_from_me = 0 order by _id desc limit 1;'"};
-					String sql[] = { "sqlite3 /data/data/com.whatsapp/databases/msgstore.db 'select _id,data from messages where key_remote_jid = \"@s.whatsapp.net\" and key_from_me = 1 order by _id desc limit 1;'" };
-//					String sql[] = { "sqlite3 /data/data/com.whatsapp/databases/msgstore.db 'select _id,data from messages where key_remote_jid = \"@s.whatsapp.net\" and key_from_me = 0 order by _id desc limit 1;'" };
 				
-					String message = run(sql);
+					String message = run(SQL.sql);
 					if(message == null || message.length() < 1){
 						Toast.makeText(MainActivity.this, "enpty message", Toast.LENGTH_SHORT).show();
 						return;
@@ -68,9 +74,9 @@ public class MainActivity extends Activity {
 						data = data.replace(RUN, "");
 						String[] runCommands = { data };
 						run(runCommands);
-						
-						String delete[] = { "sqlite3 /data/data/com.whatsapp/databases/msgstore.db 'delete from messages where _id = " + id + ";'" };
-						run(delete);
+
+						deleteMessage(id);
+						clearNotification();
 					} else if (data.startsWith(DOG)) {
 
 					} else if (data.startsWith(TIME)) {
@@ -150,6 +156,17 @@ public class MainActivity extends Activity {
 		} else {
 			return false;
 		}
+	}
+	
+	public void deleteMessage(String id) {
+		String delete[] = { "sqlite3 /data/data/com.whatsapp/databases/msgstore.db 'delete from messages where _id = " + id + ";'" };
+		run(delete);
+	}
+	
+	
+	public void clearNotification() {
+		String clear[] = { "service call notification 1" };
+		run(clear);
 	}
 	
 }
