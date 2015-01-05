@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				String[] commands = { "dumpsys notification" };
 				String log = run(commands);
-				String notiTitle = debug ? " 发信息给您" : " 发信息给您";
+				String notiTitle = debug ? " 发信息给您" : "null 发信息给您";
 				boolean checkNotfi = false;
 //				checkNotfi = true;
 				
